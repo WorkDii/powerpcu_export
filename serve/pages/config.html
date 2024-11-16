@@ -19,6 +19,34 @@
           },
         }
       </script>
+      <script>
+        // Add this function to fetch and populate form fields
+        window.onload = async function() {
+          try {
+            const response = await fetch('/get_env');
+            if (!response.ok) {
+              throw new Error('Failed to fetch environment data');
+            }
+            
+            const data = await response.json();
+            const fields = [
+              'api_url', 'api_token', 'db_type', 'db_host', 
+              'db_port', 'db_name', 'db_user', 'db_password'
+            ];
+            
+            fields.forEach(field => {
+              const element = document.getElementById(field);
+              if (element && data[field]) {
+                element.value = data[field];
+              }
+            });
+          } catch (error) {
+            console.error('Error loading environment data:', error);
+            // Optionally show error message to user
+            // alert('ไม่สามารถโหลดค่าเริ่มต้นได้ กรุณาลองใหม่อีกครั้ง');
+          }
+        }
+      </script>
     </head>
     <body class="min-h-screen bg-gray-50 flex items-center justify-center p-4 font-sans">
       <div class="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8">
