@@ -1,0 +1,31 @@
+name: Release Build
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+
+      - name: Run tests
+        run: deno run test
+
+      - name: Build executable
+        run: deno run build
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./out/powerpcu_export.exe
+          asset_name: powerpcu_export.exe
+          asset_content_type: application/octet-stream
