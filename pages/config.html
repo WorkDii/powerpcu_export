@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+  <html lang="th">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>การตั้งค่าฐานข้อมูล</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+      <script src="https://cdn.tailwindcss.com"></script>
+      <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              fontFamily: {
+                sans: ['Noto Sans Thai', 'sans-serif'],
+              },
+            },
+          },
+        }
+      </script>
+    </head>
+    <body class="min-h-screen bg-gray-50 flex items-center justify-center p-4 font-sans">
+      <div class="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8">
+        <img src="/assets/banner.png" alt="แบนเนอร์" class="mx-auto" />
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">การตั้งค่า</h1>
+        <p class="text-gray-600 mb-8">
+          กรอกรายละเอียดการตั้งค่า API และฐานข้อมูลของคุณ
+        </p>
+
+        <form  method="POST" action="/save-config">
+          <!-- API Configuration Section -->
+          <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">
+              การตั้งค่า API
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  for="api_url"
+                >
+                  URL ของ API
+                </label>
+                <input
+                  type="url"
+                  id="api_url"
+                  name="api_url"
+                  placeholder="https://api.example.com"
+                  class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  for="api_token"
+                >
+                  API Token
+                </label>
+                <input
+                  type="password"
+                  id="api_token"
+                  name="api_token"
+                  placeholder="กรอก API Token ของคุณ"
+                  class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                />
+              </div>
+            </div>
+          </section>
+
+          <!-- Database Configuration Section -->
+          <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">
+              การตั้งค่าฐานข้อมูล
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  for="db_type"
+                >
+                  ประเภทฐานข้อมูล
+                </label>
+                <div class="relative">
+                  <select
+                    id="db_type"
+                    name="db_type"
+                    class="w-full appearance-none rounded-lg border border-gray-300 px-4 py-2.5 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors bg-white"
+                  >
+                    <option>MySQL</option>
+                    <option>PostgreSQL</option>
+                  </select>
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+                  >
+                    <svg
+                      class="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  for="db_host"
+                >
+                  โฮสต์ฐานข้อมูล
+                </label>
+                <input
+                  type="text"
+                  id="db_host"
+                  name="db_host"
+                  placeholder="localhost"
+                  class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  for="db_port"
+                >
+                  พอร์ตฐานข้อมูล
+                </label>
+                <input
+                  type="number"
+                  id="db_port"
+                  name="db_port"
+                  placeholder="3306"
+                  class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  for="db_name"
+                >
+                  ชื่อฐานข้อมูล
+                </label>
+                <input
+                  type="text"
+                  id="db_name"
+                  name="db_name"
+                  placeholder="mydb"
+                  class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  for="db_user"
+                >
+                  ชื่อผู้ใช้ฐานข้อมูล
+                </label>
+                <input
+                  type="text"
+                  id="db_user"
+                  name="db_user"
+                  placeholder="ชื่อผู้ใช้"
+                  class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  for="db_password"
+                >
+                  รหัสผ่านฐานข้อมูล
+                </label>
+                <input
+                  type="password"
+                  id="db_password"
+                  name="db_password"
+                  placeholder="กรอกรหัสผ่านฐานข้อมูล"
+                  class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                />
+              </div>
+            </div>
+          </section>
+
+          <div class="mt-8 flex justify-end">
+            <button
+              type="submit"
+              class="px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 transition-colors"
+            >
+              บันทึกการตั้งค่า
+            </button>
+          </div>
+        </form>
+      </div>
+    </body>
+  </html>
