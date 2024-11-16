@@ -15,7 +15,7 @@ jobs:
         uses: denoland/setup-deno@v2
 
       - name: Run tests
-        run: deno run test
+        run: deno test
 
       - name: Build executable
         run: deno run build

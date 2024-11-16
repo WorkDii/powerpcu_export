@@ -1,5 +1,4 @@
 {
-  "name": "@powerpcu/export",
   "tasks": {
     "dev": "deno run -A --watch main.ts",
     "build": "deno compile -A --icon assets/icon.ico --output out/powerpcu_export.exe main.ts"
