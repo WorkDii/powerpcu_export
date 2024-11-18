@@ -1,4 +1,4 @@
-import { configSchema } from "./schema.ts";
+import { configSchema } from "../../lib/schema.ts";
 import { z } from "zod";
 
 export const saveConfig = async (config: z.infer<typeof configSchema>) => {

@@ -1,8 +1,8 @@
 1. corntab เพิ่มคำสั่ง ทุกๆ 1 ชั่วโมง
 2. reader own ou from api
-3. reader lastest excute time from file lastest_excute_time.txt
-4. if lastest excute time is less than x hour from ou [export_every_hours], then skip
-5. else excute export
+3. reader latest execute time from file latest_execute_time.txt
+4. if latest execute time is less than x hour from ou [export_every_hours], then skip
+5. else execute export
     - Get list all list query from API `query_map`
     - Get data from JHCISDB with list query
     - Save data to data_hinfo DB in MySQL by used `[name table]_powerpcu` from query_map
@@ -15,7 +15,7 @@
         - If data `PKINDEX` exists but `PKD_UPDATE` is different then update data in this table and update data to server
         - If data `PKINDEX` and `PKD_UPDATE` are same then do nothing
         - If data `PKINDEX` exists but in table `[name table]_powerpcu` does not exist then update data to server with delete flag
-6. update lastest excute time to file lastest_excute_time.txt
+6. update latest execute time to file latest_execute_time.txt
 
 ```mermaid
 flowchart TD

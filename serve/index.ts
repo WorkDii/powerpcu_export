@@ -1,6 +1,6 @@
 import { Hono } from "@hono";
 import { serveStatic } from "@hono/deno";
-import { configSchema } from "./saveConfig/schema.ts";
+import { configSchema } from "../lib/schema.ts";
 import { saveConfig } from "./saveConfig/index.ts";
 const app = new Hono();
 
@@ -17,7 +17,17 @@ app.post("/save-config", async (c) => {
     const body = await c.req.formData();
     const config = await configSchema.parseAsync(Object.fromEntries(body));
     await saveConfig(config);
-    return c.text("การตั้งค่าถูกบันทึกแล้ว");
+    setTimeout(async () => {
+      console.log("restart powerpcu_export service");
+      // call restart poweerpcu_export service
+      const process = new Deno.Command("sc", {
+        args: ["restart", "powerpcu_export"],
+      });
+      await process.output();
+    }, 1000);
+    return c.text(
+      "การตั้งค่าถูกบันทึกแล้ว ระบบกำลังรีสตาร์โปรแกรมเพื่ออัปเดตการตั้งค่าใหม่"
+    );
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     return c.text(
