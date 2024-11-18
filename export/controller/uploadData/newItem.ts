@@ -1,6 +1,8 @@
+import { directusClient } from "../../../lib/api.ts";
 import { mysqlClient } from "../../../lib/db.ts";
 import { QueryMap } from "../../../lib/type.ts";
 import { getTableName } from "../getTableName.ts";
+import { createItem } from "@directus/sdk";
 
 export const listNewItem = async (
   tableNames: ReturnType<typeof getTableName>
@@ -10,8 +12,8 @@ export const listNewItem = async (
     const [rows] = await conn.query(`
       SELECT d.*
       FROM ${tableNames.data} d
-      LEFT JOIN ${tableNames.sync} s ON d.primary_key_hash = s.primary_key_hash
-      WHERE s.primary_key_hash IS NULL
+      LEFT JOIN ${tableNames.sync} s ON d.PRIMARY_KEY_HASH = s.PRIMARY_KEY_HASH
+      WHERE s.PRIMARY_KEY_HASH IS NULL
     `);
 
     return rows;
@@ -23,27 +25,20 @@ export const listNewItem = async (
 };
 
 const uploadItem = async (
-  {
-    row_hash,
-    primary_key_hash,
-    ...item
-  }: { row_hash: string; primary_key_hash: string },
-  sync_table: string
+  item: { ROW_HASH: string; PRIMARY_KEY_HASH: string; DELETE_STATUS: number },
+  sync_table: string,
+  queryMap: QueryMap
 ) => {
-  // call rest
-  console.log(item);
-
   const conn = await mysqlClient.getConnection();
   try {
-    const [rows] = await conn.query(
+    await directusClient.request(createItem(queryMap.target_table, item));
+    await conn.query(
       `
-    INSERT INTO ${sync_table} (primary_key_hash, row_hash)
-      VALUES (?, ?) 
+    INSERT INTO ${sync_table} (PRIMARY_KEY_HASH, ROW_HASH)
+      VALUES (?, ?)
     `,
-      [primary_key_hash, row_hash]
+      [item.PRIMARY_KEY_HASH, item.ROW_HASH]
     );
-
-    return rows;
   } catch (error) {
     throw error;
   } finally {
@@ -53,8 +48,14 @@ const uploadItem = async (
 export const uploadNewItems = async (queryMap: QueryMap) => {
   const tableNames = getTableName(queryMap);
   const newItems = (await listNewItem(tableNames)) as any[];
-  for (const item of newItems) {
-    await uploadItem(item, tableNames.sync);
+  for (let index = 0; index < newItems.length; index++) {
+    const item = newItems[index];
+    console.log(
+      `add item ${item.PRIMARY_KEY_HASH} to directus ${index + 1} / ${
+        newItems.length
+      }`
+    );
+    await uploadItem(item, tableNames.sync, queryMap);
   }
   console.log("finish uploadNewItems");
 };

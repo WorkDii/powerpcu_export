@@ -5,6 +5,6 @@ import { uploadUpdateItems } from "./update.ts";
 
 export const uploadData = async (queryMap: QueryMap) => {
   await uploadNewItems(queryMap);
-  await uploadUpdateItems(queryMap);
-  await uploadDeleteItems(queryMap);
+  // await uploadUpdateItems(queryMap);
+  // await uploadDeleteItems(queryMap);
 };

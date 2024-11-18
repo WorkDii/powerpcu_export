@@ -46,15 +46,15 @@ export const createTableData = async (queryMap: QueryMap) => {
     const sqlCreateTable = `
       CREATE TABLE IF NOT EXISTS ${tableNames.data}
       DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-      SELECT t.*, md5(CONCAT_WS('', ${columnsStr})) as row_hash, md5(CONCAT_WS('', ${primary_column})) as primary_key_hash
+      SELECT t.*, md5(CONCAT_WS('', ${columnsStr})) as ROW_HASH, md5(CONCAT_WS('', ${primary_column})) as PRIMARY_KEY_HASH
       FROM ${tableNames.temp} as t;
     `;
     await conn.query(sqlCreateTable);
     await conn.query(`
-      ALTER TABLE ${tableNames.data} ADD INDEX idx_row_hash (row_hash);
+      ALTER TABLE ${tableNames.data} ADD INDEX idx_ROW_HASH (ROW_HASH);
     `);
     await conn.query(`
-      ALTER TABLE ${tableNames.data} ADD INDEX idx_primary_key_hash (primary_key_hash);
+      ALTER TABLE ${tableNames.data} ADD INDEX idx_PRIMARY_KEY_HASH (PRIMARY_KEY_HASH);
     `);
 
     // drop temp table

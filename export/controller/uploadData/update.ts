@@ -10,8 +10,8 @@ export const listUpdateItem = async (
     const [rows] = await conn.query(`
       SELECT d.*
       FROM ${tableNames.data} d
-      LEFT JOIN ${tableNames.sync} s ON d.primary_key_hash = s.primary_key_hash
-      WHERE s.row_hash != d.row_hash
+      LEFT JOIN ${tableNames.sync} s ON d.PRIMARY_KEY_HASH = s.PRIMARY_KEY_HASH
+      WHERE s.ROW_HASH != d.ROW_HASH
     `);
 
     return rows;
@@ -24,10 +24,10 @@ export const listUpdateItem = async (
 
 const updateItem = async (
   {
-    row_hash,
-    primary_key_hash,
+    ROW_HASH,
+    PRIMARY_KEY_HASH,
     ...item
-  }: { row_hash: string; primary_key_hash: string },
+  }: { ROW_HASH: string; PRIMARY_KEY_HASH: string },
   sync_table: string
 ) => {
   // call rest
@@ -37,10 +37,10 @@ const updateItem = async (
   try {
     const [rows] = await conn.query(
       `
-    UPDATE ${sync_table} SET row_hash = ?
-      WHERE primary_key_hash = ?
+    UPDATE ${sync_table} SET ROW_HASH = ?
+      WHERE PRIMARY_KEY_HASH = ?
     `,
-      [row_hash, primary_key_hash]
+      [ROW_HASH, PRIMARY_KEY_HASH]
     );
 
     return rows;

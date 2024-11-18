@@ -10,8 +10,8 @@ export const listDeleteItem = async (
     const [rows] = await conn.query(`
       SELECT s.*
       FROM ${tableNames.sync} s
-      LEFT JOIN ${tableNames.data} d ON d.primary_key_hash = s.primary_key_hash
-      WHERE d.primary_key_hash IS NULL and s.delete_status = 0
+      LEFT JOIN ${tableNames.data} d ON d.PRIMARY_KEY_HASH = s.PRIMARY_KEY_HASH
+      WHERE d.PRIMARY_KEY_HASH IS NULL and s.DELETE_STATUS = 0
     `);
 
     return rows;
@@ -23,7 +23,7 @@ export const listDeleteItem = async (
 };
 
 const deleteItem = async (
-  { primary_key_hash, ...item }: { primary_key_hash: string },
+  { PRIMARY_KEY_HASH, ...item }: { PRIMARY_KEY_HASH: string },
   sync_table: string
 ) => {
   // call rest
@@ -33,10 +33,10 @@ const deleteItem = async (
   try {
     const [rows] = await conn.query(
       `
-    UPDATE ${sync_table} SET delete_status = ?
-      WHERE primary_key_hash = ?
+    UPDATE ${sync_table} SET DELETE_STATUS = ?
+      WHERE PRIMARY_KEY_HASH = ?
     `,
-      [1, primary_key_hash]
+      [1, PRIMARY_KEY_HASH]
     );
 
     return rows;
