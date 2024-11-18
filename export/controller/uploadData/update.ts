@@ -1,5 +1,6 @@
 import { directusClient } from "../../../lib/api.ts";
 import { mysqlClient } from "../../../lib/db.ts";
+import { logger } from "../../../lib/log.ts";
 import { QueryMap } from "../../../lib/type.ts";
 import { getTableName } from "../getTableName.ts";
 import { updateItem as directusUpdateItem } from "@directus/sdk";
@@ -61,12 +62,12 @@ export const uploadUpdateItems = async (queryMap: QueryMap) => {
   const updateItems = (await listUpdateItem(tableNames)) as any[];
   for (let index = 0; index < updateItems.length; index++) {
     const item = updateItems[index];
-    console.log(
+    logger.info(
       `update item ${item.PRIMARY_KEY_HASH} to directus ${index + 1} / ${
         updateItems.length
       }`
     );
     await updateItem(item, tableNames.sync, queryMap);
   }
-  console.log("finish uploadUpdateItems");
+  logger.info(`end uploadUpdateItems ${queryMap.target_table}`);
 };

@@ -1,3 +1,4 @@
+import { logger } from "../lib/log.ts";
 import { createTableData } from "./controller/creataTableData.ts";
 import { createTableSync } from "./controller/creataTableSync.ts";
 import { isShouldExecuteExport } from "./controller/isShouldExecuteExport.ts";
@@ -9,15 +10,14 @@ try {
   const ou = await getOu();
   const { export_every_hours, query_map } = ou;
   if (await isShouldExecuteExport(export_every_hours)) {
-    console.time("export data");
+    logger.info("start export data");
     for (const queryMap of query_map) {
-      console.time(`export data ${queryMap.query_map_id.target_table}`);
+      logger.info(`export data ${queryMap.query_map_id.target_table}`);
       await createTableData(queryMap.query_map_id);
       await createTableSync(queryMap.query_map_id);
       await uploadData(queryMap.query_map_id);
     }
-    console.timeEnd("export data");
   }
 } catch (error) {
-  console.error(error);
+  logger.error(error);
 }

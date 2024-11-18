@@ -3,6 +3,7 @@ import { directusClient } from "../../../lib/api.ts";
 import { mysqlClient } from "../../../lib/db.ts";
 import { QueryMap } from "../../../lib/type.ts";
 import { getTableName } from "../getTableName.ts";
+import { logger } from "../../../lib/log.ts";
 
 export const listDeleteItem = async (
   tableNames: ReturnType<typeof getTableName>
@@ -57,12 +58,12 @@ export const uploadDeleteItems = async (queryMap: QueryMap) => {
   const deleteItems = (await listDeleteItem(tableNames)) as any[];
   for (let index = 0; index < deleteItems.length; index++) {
     const item = deleteItems[index];
-    console.log(
+    logger.info(
       `delete item ${item.PRIMARY_KEY_HASH} from directus ${index + 1} / ${
         deleteItems.length
       }`
     );
     await deleteItem(item, tableNames.sync, queryMap);
   }
-  console.log("finish uploadDeleteItems");
+  logger.info(`finish uploadDeleteItems ${queryMap.target_table}`);
 };

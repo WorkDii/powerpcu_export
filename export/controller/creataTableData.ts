@@ -2,15 +2,14 @@ import { mysqlClient } from "../../lib/db.ts";
 import { QueryMap } from "../../lib/type.ts";
 import { RowDataPacket } from "mysql2";
 import { getTableName } from "./getTableName.ts";
-
-const TARGET_DB = "data_hinfo";
+import { logger } from "../../lib/log.ts";
 
 interface Column extends RowDataPacket {
   COLUMN_NAME: string;
 }
 
 export const createTableData = async (queryMap: QueryMap) => {
-  console.time("createTableData");
+  logger.info(`createTableData ${queryMap.target_table}`);
   const primary_column = queryMap.field_primary_key;
   const conn = await mysqlClient.getConnection();
   const tableNames = getTableName(queryMap);
@@ -65,6 +64,6 @@ export const createTableData = async (queryMap: QueryMap) => {
     throw error;
   } finally {
     conn.release();
-    console.timeEnd("createTableData");
+    logger.info(`end createTableData ${queryMap.target_table}`);
   }
 };

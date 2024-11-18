@@ -2,6 +2,7 @@ import { Hono } from "@hono";
 import { serveStatic } from "@hono/deno";
 import { configSchema } from "../lib/schema.ts";
 import { saveConfig } from "./saveConfig/index.ts";
+import { logger } from "../lib/log.ts";
 const app = new Hono();
 
 // Serve static files
@@ -18,7 +19,7 @@ app.post("/save-config", async (c) => {
     const config = await configSchema.parseAsync(Object.fromEntries(body));
     await saveConfig(config);
     setTimeout(async () => {
-      console.log("restart powerpcu_export service");
+      logger.info("restart powerpcu_export service");
       // call restart poweerpcu_export service
       const process = new Deno.Command("sc", {
         args: ["restart", "powerpcu_export"],
@@ -43,4 +44,4 @@ app.get("/get_env", async (c) => {
   return c.json(Object.fromEntries(envs));
 });
 
-Deno.serve({ port: Deno.env.get("PORT") || 8765 }, app.fetch);
+Deno.serve({ port: 8765 }, app.fetch);
