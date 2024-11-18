@@ -10,6 +10,7 @@ interface Column extends RowDataPacket {
 }
 
 export const createTableSync = async (queryMap: QueryMap) => {
+  console.time("createTableSync");
   const tableNames = getTableName(queryMap);
   const conn = await mysqlClient.getConnection();
   try {
@@ -35,5 +36,6 @@ export const createTableSync = async (queryMap: QueryMap) => {
     throw error;
   } finally {
     conn.release();
+    console.timeEnd("createTableSync");
   }
 };

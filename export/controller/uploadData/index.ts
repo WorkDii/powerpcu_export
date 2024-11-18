@@ -4,7 +4,14 @@ import { uploadNewItems } from "./newItem.ts";
 import { uploadUpdateItems } from "./update.ts";
 
 export const uploadData = async (queryMap: QueryMap) => {
-  await uploadNewItems(queryMap);
-  // await uploadUpdateItems(queryMap);
-  // await uploadDeleteItems(queryMap);
+  try {
+    console.time(`uploadData ${queryMap.target_table}`);
+    await uploadNewItems(queryMap);
+    await uploadUpdateItems(queryMap);
+    await uploadDeleteItems(queryMap);
+  } catch (error) {
+    throw error;
+  } finally {
+    console.timeEnd(`uploadData ${queryMap.target_table}`);
+  }
 };

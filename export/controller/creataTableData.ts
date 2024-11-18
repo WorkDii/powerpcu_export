@@ -10,8 +10,7 @@ interface Column extends RowDataPacket {
 }
 
 export const createTableData = async (queryMap: QueryMap) => {
-  const targetTable = `${queryMap.target_table}_data`;
-  const targetTableTemp = `${queryMap.target_table}_data_temp`;
+  console.time("createTableData");
   const primary_column = queryMap.field_primary_key;
   const conn = await mysqlClient.getConnection();
   const tableNames = getTableName(queryMap);
@@ -66,5 +65,6 @@ export const createTableData = async (queryMap: QueryMap) => {
     throw error;
   } finally {
     conn.release();
+    console.timeEnd("createTableData");
   }
 };

@@ -1,3 +1,5 @@
+import { updateItem } from "@directus/sdk";
+import { directusClient } from "../../../lib/api.ts";
 import { mysqlClient } from "../../../lib/db.ts";
 import { QueryMap } from "../../../lib/type.ts";
 import { getTableName } from "../getTableName.ts";
@@ -24,11 +26,14 @@ export const listDeleteItem = async (
 
 const deleteItem = async (
   { PRIMARY_KEY_HASH, ...item }: { PRIMARY_KEY_HASH: string },
-  sync_table: string
+  sync_table: string,
+  queryMap: QueryMap
 ) => {
-  // call rest
-  console.log(item);
-
+  await directusClient.request(
+    updateItem(queryMap.target_table, PRIMARY_KEY_HASH, {
+      DELETE_STATUS: 1,
+    })
+  );
   const conn = await mysqlClient.getConnection();
   try {
     const [rows] = await conn.query(
@@ -50,8 +55,14 @@ const deleteItem = async (
 export const uploadDeleteItems = async (queryMap: QueryMap) => {
   const tableNames = getTableName(queryMap);
   const deleteItems = (await listDeleteItem(tableNames)) as any[];
-  for (const item of deleteItems) {
-    await deleteItem(item, tableNames.sync);
+  for (let index = 0; index < deleteItems.length; index++) {
+    const item = deleteItems[index];
+    console.log(
+      `delete item ${item.PRIMARY_KEY_HASH} from directus ${index + 1} / ${
+        deleteItems.length
+      }`
+    );
+    await deleteItem(item, tableNames.sync, queryMap);
   }
   console.log("finish uploadDeleteItems");
 };
