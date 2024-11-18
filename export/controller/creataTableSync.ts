@@ -20,14 +20,14 @@ export const createTableSync = async (queryMap: QueryMap) => {
       CREATE TABLE IF NOT EXISTS ${tableNames.sync} (
         primary_key_hash VARCHAR(32) NOT NULL,
         row_hash VARCHAR(32) NOT NULL,
-        sync_status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
+        delete_status TINYINT(1) DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (primary_key_hash),
         INDEX idx_row_hash (row_hash),
         INDEX idx_primary_key_hash (primary_key_hash),
-        INDEX idx_sync_status (sync_status) 
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci; 
+        INDEX idx_delete_status (delete_status)
+      ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci; 
     `);
     await conn.commit();
   } catch (error) {

@@ -7,8 +7,6 @@ export const listNewItem = async (
 ) => {
   const conn = await mysqlClient.getConnection();
   try {
-    await conn.beginTransaction();
-
     const [rows] = await conn.query(`
       SELECT d.*
       FROM ${tableNames.data} d
@@ -16,10 +14,8 @@ export const listNewItem = async (
       WHERE s.primary_key_hash IS NULL
     `);
 
-    await conn.commit();
     return rows;
   } catch (error) {
-    await conn.rollback();
     throw error;
   } finally {
     conn.release();
@@ -42,7 +38,7 @@ const uploadItem = async (
     const [rows] = await conn.query(
       `
     INSERT INTO ${sync_table} (primary_key_hash, row_hash)
-      VALUES (?, ?)
+      VALUES (?, ?) 
     `,
       [primary_key_hash, row_hash]
     );
@@ -54,12 +50,11 @@ const uploadItem = async (
     conn.release();
   }
 };
-export const uploadNewItem = async (queryMap: QueryMap) => {
+export const uploadNewItems = async (queryMap: QueryMap) => {
   const tableNames = getTableName(queryMap);
-
   const newItems = (await listNewItem(tableNames)) as any[];
   for (const item of newItems) {
     await uploadItem(item, tableNames.sync);
   }
-  console.log("finish");
+  console.log("finish uploadNewItems");
 };

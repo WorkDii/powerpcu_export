@@ -1,8 +1,10 @@
 import { QueryMap } from "../../../lib/type.ts";
-import { uploadNewItem } from "./newItem.ts";
-
-// uploadNewItem("test");
+import { uploadDeleteItems } from "./delete.ts";
+import { uploadNewItems } from "./newItem.ts";
+import { uploadUpdateItems } from "./update.ts";
 
 export const uploadData = async (queryMap: QueryMap) => {
-  await uploadNewItem(queryMap);
+  await uploadNewItems(queryMap);
+  await uploadUpdateItems(queryMap);
+  await uploadDeleteItems(queryMap);
 };

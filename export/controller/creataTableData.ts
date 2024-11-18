@@ -26,7 +26,7 @@ export const createTableData = async (queryMap: QueryMap) => {
     // create temp table
     await conn.query(
       `CREATE TABLE IF NOT EXISTS ${tableNames.temp} 
-      ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+      DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
       AS (${queryMap.query}) `
     );
 
@@ -45,7 +45,7 @@ export const createTableData = async (queryMap: QueryMap) => {
     // create table
     const sqlCreateTable = `
       CREATE TABLE IF NOT EXISTS ${tableNames.data}
-      ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+      DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
       SELECT t.*, md5(CONCAT_WS('', ${columnsStr})) as row_hash, md5(CONCAT_WS('', ${primary_column})) as primary_key_hash
       FROM ${tableNames.temp} as t;
     `;

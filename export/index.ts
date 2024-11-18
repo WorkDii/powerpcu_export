@@ -4,15 +4,11 @@ import { isShouldExecuteExport } from "./controller/isShouldExecuteExport.ts";
 import { getOu } from "./controller/ou.ts";
 import { uploadData } from "./controller/uploadData/index.ts";
 
-const TARGET_DB = "data_hinfo";
-
 // Deno.cron("export data every hour", "* * * * *", async () => {
 const ou = await getOu();
 const { export_every_hours, query_map } = ou;
 if (await isShouldExecuteExport(export_every_hours)) {
-  console.log("execute export");
-
-  // await createTableData(query_map[0].query_map_id);
-  // await createTableSync(query_map[0].query_map_id);
+  await createTableData(query_map[0].query_map_id);
+  await createTableSync(query_map[0].query_map_id);
   await uploadData(query_map[0].query_map_id);
 }
