@@ -23,13 +23,11 @@ jobs:
         run: deno run build
 
       - name: Upload to Cloudflare R2
-        env:
-          R2_ACCESS_KEY_ID: ${{ secrets.POWERPCU_EXPORT_R2_RW_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.POWERPCU_EXPORT_R2_RW_SECRET_ACCESS_KEY }}
-          R2_BUCKET: ${{ secrets.R2_BUCKET }}
-          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
-        uses: aws-actions/aws-cli@v2
+        uses: magicwallet/r2-upload@main
         with:
-          args: |
-            s3 cp ./out/powerpcu_export.exe s3://$R2_BUCKET/powerpcu_export.exe \
-            --endpoint-url $R2_ENDPOINT
+          endpoint: ${{ secrets.R2_ENDPOINT }}
+          access_key_id: ${{ secrets.POWERPCU_EXPORT_R2_RW_ACCESS_KEY_ID }}
+          secret_access_key: ${{ secrets.POWERPCU_EXPORT_R2_RW_SECRET_ACCESS_KEY }}
+          bucket: ${{ secrets.R2_BUCKET }}
+          file: ./out/powerpcu_export.exe
+          destination: "/"
