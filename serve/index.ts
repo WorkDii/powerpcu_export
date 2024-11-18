@@ -43,4 +43,4 @@ app.get("/get_env", async (c) => {
   return c.json(Object.fromEntries(envs));
 });
 
-Deno.serve(app.fetch);
+Deno.serve({ port: Deno.env.get("PORT") || 8765 }, app.fetch);
