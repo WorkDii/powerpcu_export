@@ -1,7 +1,7 @@
 {
   "tasks": {
     "dev": "deno run -A --unstable-cron --watch main.ts",
-    "build": "deno compile -A --icon assets/icon.ico --output out/powerpcu_export.exe main.ts"
+    "build": "deno compile -A --icon assets/icon.ico --no-check --output out/powerpcu_export.exe main.ts"
   },
   "imports": {
     "@directus/sdk": "npm:@directus/sdk@^18.0.0",

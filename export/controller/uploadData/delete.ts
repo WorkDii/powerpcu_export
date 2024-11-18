@@ -1,6 +1,6 @@
 import { updateItem } from "@directus/sdk";
 import { directusClient } from "../../../lib/api.ts";
-import { mysqlClient } from "../../../lib/db.ts";
+import { pool as conn } from "../../../lib/db.ts";
 import { QueryMap } from "../../../lib/type.ts";
 import { getTableName } from "../getTableName.ts";
 import { logger } from "../../../lib/log.ts";
@@ -8,7 +8,6 @@ import { logger } from "../../../lib/log.ts";
 export const listDeleteItem = async (
   tableNames: ReturnType<typeof getTableName>
 ) => {
-  const conn = await mysqlClient.getConnection();
   try {
     const [rows] = await conn.query(`
       SELECT s.*
@@ -20,8 +19,6 @@ export const listDeleteItem = async (
     return rows;
   } catch (error) {
     throw error;
-  } finally {
-    conn.release();
   }
 };
 
@@ -35,7 +32,6 @@ const deleteItem = async (
       DELETE_STATUS: 1,
     })
   );
-  const conn = await mysqlClient.getConnection();
   try {
     const [rows] = await conn.query(
       `
@@ -48,8 +44,6 @@ const deleteItem = async (
     return rows;
   } catch (error) {
     throw error;
-  } finally {
-    conn.release();
   }
 };
 

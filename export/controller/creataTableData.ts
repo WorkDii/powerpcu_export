@@ -1,4 +1,4 @@
-import { mysqlClient } from "../../lib/db.ts";
+import { pool } from "../../lib/db.ts";
 import { QueryMap } from "../../lib/type.ts";
 import { RowDataPacket } from "mysql2";
 import { getTableName } from "./getTableName.ts";
@@ -11,9 +11,9 @@ interface Column extends RowDataPacket {
 export const createTableData = async (queryMap: QueryMap) => {
   logger.info(`createTableData ${queryMap.target_table}`);
   const primary_column = queryMap.field_primary_key;
-  const conn = await mysqlClient.getConnection();
   const tableNames = getTableName(queryMap);
 
+  const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
 

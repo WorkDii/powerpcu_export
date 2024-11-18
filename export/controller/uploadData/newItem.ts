@@ -1,5 +1,5 @@
 import { directusClient } from "../../../lib/api.ts";
-import { mysqlClient } from "../../../lib/db.ts";
+import { pool as conn } from "../../../lib/db.ts";
 import { logger } from "../../../lib/log.ts";
 import { QueryMap } from "../../../lib/type.ts";
 import { getTableName } from "../getTableName.ts";
@@ -8,7 +8,6 @@ import { createItem } from "@directus/sdk";
 export const listNewItem = async (
   tableNames: ReturnType<typeof getTableName>
 ) => {
-  const conn = await mysqlClient.getConnection();
   try {
     const [rows] = await conn.query(`
       SELECT d.*
@@ -20,8 +19,6 @@ export const listNewItem = async (
     return rows;
   } catch (error) {
     throw error;
-  } finally {
-    conn.release();
   }
 };
 
@@ -30,7 +27,6 @@ const uploadItem = async (
   sync_table: string,
   queryMap: QueryMap
 ) => {
-  const conn = await mysqlClient.getConnection();
   try {
     await directusClient.request(createItem(queryMap.target_table, item));
     await conn.query(
@@ -42,8 +38,6 @@ const uploadItem = async (
     );
   } catch (error) {
     throw error;
-  } finally {
-    conn.release();
   }
 };
 export const uploadNewItems = async (queryMap: QueryMap) => {
