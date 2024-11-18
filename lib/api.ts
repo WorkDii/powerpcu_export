@@ -1,6 +1,9 @@
 import { createDirectus, rest, staticToken } from "@directus/sdk";
 import { env } from "./env.ts";
 
-export const directusClient = createDirectus(env.api_url)
-  .with(staticToken(env.api_token))
-  .with(rest());
+export const directusClient =
+  env.data?.api_url && env.data?.api_token
+    ? createDirectus(env.data?.api_url || "")
+        .with(staticToken(env.data?.api_token || ""))
+        .with(rest())
+    : null;
