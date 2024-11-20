@@ -45,4 +45,9 @@ app.get("/get_env", async (c) => {
   return c.json(Object.fromEntries(envs));
 });
 
-Deno.serve({ port: 8765 }, app.fetch);
+app.get("/logs", async (c) => {
+  const logs = await Deno.readTextFile("./logs/combined.log");
+  return c.text(logs.split("\n").reverse().join("\n"));
+});
+
+Deno.serve({ port: Number(Deno.env.get("PORT")) || 8765 }, app.fetch);

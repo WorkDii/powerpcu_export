@@ -1,11 +1,13 @@
 import winston from "winston";
 
 export const logger = winston.createLogger({
-  format: winston.format.prettyPrint(),
   defaultMeta: {
     service: `powerpcu_export ${Deno.env.get("VERSION") || ""}`,
     time: new Date().toLocaleString(),
   },
+  format: winston.format.printf((info) => {
+    return `${info.time} ${info.level}: ${JSON.stringify(info.message)}`;
+  }),
   transports: [
     new winston.transports.Console(),
     new winston.transports.File({
