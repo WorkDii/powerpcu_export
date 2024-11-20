@@ -14,7 +14,7 @@ export interface Ou {
 }
 
 export interface QueryMapOu {
-  query_map_id: QueryMap;
+  query_map_id?: QueryMap;
 }
 
 export interface QueryMap {

@@ -3,6 +3,7 @@ import { readItems } from "@directus/sdk";
 import { Ou } from "../../lib/type.ts";
 
 export const getOu = async () => {
+  if (!directusClient) return null;
   const data = await directusClient.request<Ou[]>(
     readItems("ou", {
       fields: ["*", "query_map.query_map_id.*"],
