@@ -29,5 +29,5 @@ jobs:
           access_key_id: ${{ secrets.POWERPCU_EXPORT_R2_RW_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.POWERPCU_EXPORT_R2_RW_SECRET_ACCESS_KEY }}
           bucket: ${{ secrets.R2_BUCKET }}
-          file: ./out/powerpcu_export.exe
-          destination: "powerpcu_export.exe"
+          file: ./out/powerpcu_export.zip
+          destination: "powerpcu_export.zip"

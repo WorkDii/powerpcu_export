@@ -4,7 +4,7 @@ import { configSchema } from "../lib/schema.ts";
 import { saveConfig } from "./saveConfig/index.ts";
 import { logger } from "../lib/log.ts";
 const app = new Hono();
-const configPage = await Deno.readTextFile("./serve/pages/config.html");
+const configPage = await Deno.readTextFile("./pages/config.html");
 
 // Serve static files
 app.get("/assets/*", serveStatic({ root: "./" }));

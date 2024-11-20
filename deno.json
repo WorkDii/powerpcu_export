@@ -1,14 +1,19 @@
 {
   "tasks": {
     "dev": "deno run -A --unstable-cron --watch main.ts",
-    "build": "deno compile -A --icon assets/icon.ico --no-check --output out/powerpcu_export.exe main.ts"
+    "prebuild": "deno run -A preBuild.ts",
+    "postbuild": "deno run -A postBuild.ts",
+    "compileProgram": "deno run -A compile.ts",
+    "build": "deno run -A prebuild && deno run -A compileProgram && deno run -A postbuild"
   },
   "imports": {
     "@directus/sdk": "npm:@directus/sdk@^18.0.0",
     "@hono": "jsr:@hono/hono@^4.6.10",
     "@std/assert": "jsr:@std/assert@1",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.2",
+    "@std/fs": "jsr:@std/fs@^1.0.5",
     "date-fns": "npm:date-fns@^4.1.0",
+    "jszip": "npm:jszip@^3.10.1",
     "mysql2": "npm:mysql2@^3.11.4",
     "winston": "npm:winston@^3.17.0",
     "zod": "npm:zod@^3.23.8"
