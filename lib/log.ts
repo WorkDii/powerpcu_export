@@ -2,11 +2,12 @@ import winston from "winston";
 
 export const logger = winston.createLogger({
   defaultMeta: {
-    service: `powerpcu_export ${Deno.env.get("VERSION") || ""}`,
-    time: new Date().toLocaleString(),
+    service: `powerpcu_export_${Deno.env.get("VERSION") || ""}`,
   },
   format: winston.format.printf((info) => {
-    return `${info.time} ${info.level}: ${JSON.stringify(info.message)}`;
+    return `${new Date().toLocaleString()}|${info.service}|${
+      info.level
+    }: ${JSON.stringify(info.message)}`;
   }),
   transports: [
     new winston.transports.Console(),
