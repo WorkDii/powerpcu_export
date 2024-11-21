@@ -31,7 +31,7 @@ const updateItem = async (
   sync_table: string,
   queryMap: QueryMap
 ) => {
-  await directusClient.request(
+  await directusClient?.request(
     directusUpdateItem(queryMap.target_table, PRIMARY_KEY_HASH, {
       ROW_HASH,
       ...item,
