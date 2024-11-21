@@ -44,7 +44,7 @@ export const createTableData = async (queryMap: QueryMap) => {
     const sqlCreateTable = `
       CREATE TABLE IF NOT EXISTS ${tableNames.data}
       DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-      SELECT t.*, md5(CONCAT_WS('', ${columnsStr})) as ROW_HASH, md5(CONCAT_WS('', ${primary_column})) as PRIMARY_KEY_HASH
+      SELECT t.*, md5(CONCAT_WS('|', ${columnsStr})) as ROW_HASH, md5(CONCAT_WS('|', ${primary_column})) as PRIMARY_KEY_HASH
       FROM ${tableNames.temp} as t;
     `;
     await conn.query(sqlCreateTable);
