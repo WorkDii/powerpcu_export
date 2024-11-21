@@ -1,15 +1,21 @@
+import { RowDataPacket } from "mysql2";
 import { directusClient } from "../../../lib/api.ts";
 import { pool as conn } from "../../../lib/db.ts";
 import { logger } from "../../../lib/log.ts";
 import { QueryMap } from "../../../lib/type.ts";
 import { getTableName } from "../getTableName.ts";
-import { createItem } from "@directus/sdk";
+import { createItems } from "@directus/sdk";
+
+interface NewItem {
+  ROW_HASH: string;
+  PRIMARY_KEY_HASH: string;
+}
 
 export const listNewItem = async (
   tableNames: ReturnType<typeof getTableName>
-) => {
+): Promise<NewItem[]> => {
   try {
-    const [rows] = await conn.query(`
+    const [rows] = await conn.query<(NewItem & RowDataPacket)[]>(`
       SELECT d.*
       FROM ${tableNames.data} d
       LEFT JOIN ${tableNames.sync} s ON d.PRIMARY_KEY_HASH = s.PRIMARY_KEY_HASH
@@ -22,19 +28,20 @@ export const listNewItem = async (
   }
 };
 
-const uploadItem = async (
-  item: { ROW_HASH: string; PRIMARY_KEY_HASH: string; DELETE_STATUS: number },
+const uploadItems = async (
+  items: NewItem[],
   sync_table: string,
   queryMap: QueryMap
 ) => {
   try {
-    await directusClient.request(createItem(queryMap.target_table, item));
+    await directusClient?.request(createItems(queryMap.target_table, items));
     await conn.query(
       `
     INSERT INTO ${sync_table} (PRIMARY_KEY_HASH, ROW_HASH)
-      VALUES (?, ?)
-    `,
-      [item.PRIMARY_KEY_HASH, item.ROW_HASH]
+      VALUES ${items
+        .map((item) => `("${item.PRIMARY_KEY_HASH}", "${item.ROW_HASH}")`)
+        .join(", ")}
+    `
     );
   } catch (error) {
     throw error;
@@ -42,15 +49,20 @@ const uploadItem = async (
 };
 export const uploadNewItems = async (queryMap: QueryMap) => {
   const tableNames = getTableName(queryMap);
-  const newItems = (await listNewItem(tableNames)) as any[];
-  for (let index = 0; index < newItems.length; index++) {
-    const item = newItems[index];
+  const newItems = await listNewItem(tableNames);
+
+  const batchSize = 100;
+  for (let i = 0; i < newItems.length; i += batchSize) {
+    const batch = newItems.slice(i, i + batchSize);
     logger.info(
-      `add item ${item.PRIMARY_KEY_HASH} to directus ${index + 1} / ${
+      `uploading to ${queryMap.target_table} batch ${
+        Math.floor(i / batchSize) + 1
+      }/${Math.ceil(newItems.length / batchSize)} (${i + 1}-${Math.min(
+        i + batchSize,
         newItems.length
-      }`
+      )}/${newItems.length} items)`
     );
-    await uploadItem(item, tableNames.sync, queryMap);
+    await uploadItems(batch, tableNames.sync, queryMap);
   }
   logger.info(`end uploadNewItems ${queryMap.target_table}`);
 };
