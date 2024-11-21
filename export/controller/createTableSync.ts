@@ -35,6 +35,5 @@ export const createTableSync = async (queryMap: QueryMap) => {
     throw error;
   } finally {
     conn.release();
-    logger.info(`end createTableSync ${queryMap.target_table}`);
   }
 };

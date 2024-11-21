@@ -14,9 +14,13 @@ try {
     const { export_every_hours, query_map } = ou;
     if (await isShouldExecuteExport(export_every_hours)) {
       logger.info("start export data");
-      for (const queryMap of query_map) {
+      for (const [index, queryMap] of query_map.entries()) {
+        logger.info(
+          `[${index + 1}/${query_map.length}] start export table ${
+            queryMap?.query_map_id?.target_table
+          }`
+        );
         if (!queryMap.query_map_id) continue;
-        logger.info(`export data ${queryMap.query_map_id.target_table}`);
         await createTableData(queryMap.query_map_id);
         await createTableSync(queryMap.query_map_id);
         await uploadData(queryMap.query_map_id);
@@ -25,5 +29,7 @@ try {
   }
 } catch (error) {
   logger.error(error);
+} finally {
+  logger.info("end export all tables");
 }
 // });

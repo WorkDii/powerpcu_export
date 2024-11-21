@@ -64,6 +64,5 @@ export const createTableData = async (queryMap: QueryMap) => {
     throw error;
   } finally {
     conn.release();
-    logger.info(`end createTableData ${queryMap.target_table}`);
   }
 };
