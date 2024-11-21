@@ -272,4 +272,3 @@ async function addPolicyToCollection() {
     }
   }
 }
-// await addPolicyToCollection();
