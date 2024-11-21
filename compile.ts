@@ -6,6 +6,7 @@ const command = new Deno.Command("deno", {
     "-A",
     "--icon",
     "assets/icon.ico",
+    "--env-file=.env.private",
     "--no-check",
     "--output",
     output,

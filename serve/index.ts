@@ -5,6 +5,7 @@ import { saveConfig } from "./saveConfig/index.ts";
 import { logger } from "../lib/log.ts";
 const app = new Hono();
 const configPage = await Deno.readTextFile("./pages/config.html");
+import { env } from "../lib/env.ts";
 
 // Serve static files
 app.get("/assets/*", serveStatic({ root: "./" }));
@@ -40,9 +41,7 @@ app.post("/save-config", async (c) => {
 });
 
 app.get("/get_env", async (c) => {
-  const env = await Deno.readTextFile("./.env");
-  const envs = env.split("\n").map((line) => line.split("="));
-  return c.json(Object.fromEntries(envs));
+  return c.json(env);
 });
 
 app.get("/logs", async (c) => {

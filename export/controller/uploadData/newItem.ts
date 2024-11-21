@@ -5,6 +5,7 @@ import { logger } from "../../../lib/log.ts";
 import { QueryMap } from "../../../lib/type.ts";
 import { getTableName } from "../getTableName.ts";
 import { createItems } from "@directus/sdk";
+import { encryptObject } from "./encrypt.ts";
 
 interface NewItem {
   ROW_HASH: string;
@@ -34,7 +35,10 @@ const uploadItems = async (
   queryMap: QueryMap
 ) => {
   try {
-    await directusClient?.request(createItems(queryMap.target_table, items));
+    const encryptedItems = await Promise.all(items.map(encryptObject));
+    await directusClient?.request(
+      createItems(queryMap.target_table, encryptedItems)
+    );
     await conn.query(
       `
     INSERT INTO ${sync_table} (PRIMARY_KEY_HASH, ROW_HASH)

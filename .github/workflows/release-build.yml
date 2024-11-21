@@ -14,6 +14,9 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v2
 
+      - name: create .env.private
+        run: echo "encryption_key=${{ secrets.ENCRYPTION_KEY }}" > .env.private
+
       - name: Run tests
         run: deno test -A
 

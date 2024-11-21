@@ -4,6 +4,7 @@ import { logger } from "../../../lib/log.ts";
 import { QueryMap } from "../../../lib/type.ts";
 import { getTableName } from "../getTableName.ts";
 import { updateItem as directusUpdateItem } from "@directus/sdk";
+import { encryptObject } from "./encrypt.ts";
 
 export const listUpdateItem = async (
   tableNames: ReturnType<typeof getTableName>
@@ -34,7 +35,7 @@ const updateItem = async (
   await directusClient?.request(
     directusUpdateItem(queryMap.target_table, PRIMARY_KEY_HASH, {
       ROW_HASH,
-      ...item,
+      ...(await encryptObject(item)),
     })
   );
   try {

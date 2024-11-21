@@ -15,7 +15,7 @@ try {
     if (await isShouldExecuteExport(export_every_hours)) {
       logger.info("start export data");
       for (const [index, queryMap] of query_map.entries()) {
-        if (!queryMap.query_map_id) continue;
+        if (!queryMap.query_map_id?.id) continue;
         logger.info(
           `[${index + 1}/${query_map.length}] start export table ${
             queryMap.query_map_id.target_table
