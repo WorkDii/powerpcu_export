@@ -13,7 +13,7 @@ export const listDeleteItem = async (
       SELECT s.*
       FROM ${tableNames.sync} s
       LEFT JOIN ${tableNames.data} d ON d.PRIMARY_KEY_HASH = s.PRIMARY_KEY_HASH
-      WHERE d.PRIMARY_KEY_HASH IS NULL and s.DELETE_STATUS = 0
+      WHERE d.PRIMARY_KEY_HASH IS NULL and s.DELETE_FLAG = 0
     `);
 
     return rows;
@@ -27,15 +27,15 @@ const deleteItem = async (
   sync_table: string,
   queryMap: QueryMap
 ) => {
-  await directusClient.request(
+  await directusClient?.request(
     updateItem(queryMap.target_table, PRIMARY_KEY_HASH, {
-      DELETE_STATUS: 1,
+      DELETE_FLAG: 1,
     })
   );
   try {
     const [rows] = await conn.query(
       `
-    UPDATE ${sync_table} SET DELETE_STATUS = ?
+    UPDATE ${sync_table} SET DELETE_FLAG = ?
       WHERE PRIMARY_KEY_HASH = ?
     `,
       [1, PRIMARY_KEY_HASH]
